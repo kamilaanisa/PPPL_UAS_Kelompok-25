@@ -10,8 +10,9 @@ import org.junit.runner.RunWith;
         glue = "stepDefinitions",
         plugin = {
                 "pretty",
-                "html:target/cucumber-reports.html", // Ini Auto-Generated Report
-                "json:target/cucumber.json"
+                "html:target/cucumber-reports/cucumber-report.html",
+                "json:target/cucumber-reports/cucumber-report.json",
+                "junit:target/cucumber-reports/cucumber-report.xml"
         },
         monochrome = true
 )
