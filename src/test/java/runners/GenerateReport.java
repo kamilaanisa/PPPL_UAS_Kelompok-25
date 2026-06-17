@@ -7,14 +7,12 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Automated Markdown Report Generator
- * 
- * Membaca output JSON dari Cucumber dan menghasilkan
+ * * Membaca output JSON dari Cucumber dan menghasilkan
  * laporan pengujian dalam format Markdown (.md)
- * 
- * Cara pakai:
- *   1. Jalankan test via TestRunner terlebih dahulu
- *   2. Jalankan class ini: java runners.GenerateReport
- *   3. Report tersedia di: target/cucumber-reports/TEST_REPORT.md
+ * * Cara pakai:
+ * 1. Jalankan test via TestRunner terlebih dahulu
+ * 2. Jalankan class ini: java runners.GenerateReport
+ * 3. Report tersedia di: target/cucumber-reports/TEST_REPORT.md
  */
 public class GenerateReport {
 
@@ -24,44 +22,44 @@ public class GenerateReport {
     public static void main(String[] args) {
         try {
             String jsonContent = new String(Files.readAllBytes(Paths.get(JSON_REPORT)));
-            
-            int totalScenarios = countOccurrences(jsonContent, "\"keyword\":\"Scenario\"") 
-                               + countOccurrences(jsonContent, "\"keyword\": \"Scenario\"");
+
+            int totalScenarios = countOccurrences(jsonContent, "\"keyword\":\"Scenario\"")
+                    + countOccurrences(jsonContent, "\"keyword\": \"Scenario\"");
             int passedScenarios = 0;
             int failedScenarios = 0;
 
             // Parse scenarios sederhana dari JSON
             String[] scenarios = jsonContent.split("\"keyword\":\\s*\"Scenario\"");
-            
+
             StringBuilder scenarioDetails = new StringBuilder();
             int scenarioIndex = 0;
 
             for (int i = 1; i < scenarios.length; i++) {
                 scenarioIndex++;
                 String scenario = scenarios[i];
-                
+
                 // Ambil nama scenario
                 String name = extractValue(scenario, "\"name\"");
-                
+
                 // Cek status: jika ada "failed" maka gagal
-                boolean hasFailed = scenario.contains("\"status\":\"failed\"") 
-                                 || scenario.contains("\"status\": \"failed\"");
-                boolean hasPassed = scenario.contains("\"status\":\"passed\"") 
-                                 || scenario.contains("\"status\": \"passed\"");
-                
+                boolean hasFailed = scenario.contains("\"status\":\"failed\"")
+                        || scenario.contains("\"status\": \"failed\"");
+                boolean hasPassed = scenario.contains("\"status\":\"passed\"")
+                        || scenario.contains("\"status\": \"passed\"");
+
                 String status;
                 String statusIcon;
                 if (hasFailed) {
                     status = "FAILED";
-                    statusIcon = "❌";
+                    statusIcon = "";
                     failedScenarios++;
                 } else if (hasPassed) {
                     status = "PASSED";
-                    statusIcon = "✅";
+                    statusIcon = "";
                     passedScenarios++;
                 } else {
                     status = "SKIPPED";
-                    statusIcon = "⏭️";
+                    statusIcon = "";
                     failedScenarios++;
                 }
 
@@ -75,8 +73,8 @@ public class GenerateReport {
                         int end = scenario.indexOf("\"", start);
                         if (start > 0 && end > start && (end - start) < 500) {
                             errorMsg = scenario.substring(start, end)
-                                .replace("\\n", "\n")
-                                .replace("\\t", "  ");
+                                    .replace("\\n", "\n")
+                                    .replace("\\t", "  ");
                         }
                     }
                 }
@@ -91,12 +89,12 @@ public class GenerateReport {
                 double durationSeconds = totalDuration / 1_000_000_000.0;
 
                 scenarioDetails.append("### ").append(scenarioIndex).append(". ")
-                    .append(statusIcon).append(" ").append(name != null ? name.trim() : "Scenario " + scenarioIndex)
-                    .append("\n\n");
+                        .append(statusIcon).append(" ").append(name != null ? name.trim() : "Scenario " + scenarioIndex)
+                        .append("\n\n");
                 scenarioDetails.append("| Field | Detail |\n|-------|--------|\n");
                 scenarioDetails.append("| **Status** | ").append(status).append(" |\n");
                 scenarioDetails.append("| **Durasi** | ").append(String.format("%.2f", durationSeconds)).append(" detik |\n");
-                
+
                 if (!errorMsg.isEmpty()) {
                     // Ambil baris pertama saja untuk tabel
                     String firstLine = errorMsg.split("\n")[0];
@@ -112,9 +110,9 @@ public class GenerateReport {
 
             // Generate Markdown
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm:ss"));
-            
+
             StringBuilder md = new StringBuilder();
-            md.append("# 📋 Laporan Hasil Pengujian Otomatis\n\n");
+            md.append("# Laporan Hasil Pengujian Otomatis\n\n");
             md.append("**Proyek**: Sistem Informasi Klinik drh. Fanina  \n");
             md.append("**Modul**: Invoice & Pembayaran  \n");
             md.append("**Tanggal**: ").append(timestamp).append("  \n");
@@ -123,53 +121,53 @@ public class GenerateReport {
             md.append("---\n\n");
 
             // Ringkasan
-            md.append("## 📊 Ringkasan Hasil\n\n");
+            md.append("## Ringkasan Hasil\n\n");
             md.append("| Metrik | Nilai |\n");
             md.append("|--------|-------|\n");
             md.append("| Total Skenario | ").append(totalScenarios).append(" |\n");
-            md.append("| ✅ Passed | ").append(passedScenarios).append(" |\n");
-            md.append("| ❌ Failed | ").append(failedScenarios).append(" |\n");
-            md.append("| 📈 Pass Rate | ").append(String.format("%.1f", passRate)).append("% |\n\n");
+            md.append("| Passed | ").append(passedScenarios).append(" |\n");
+            md.append("| Failed | ").append(failedScenarios).append(" |\n");
+            md.append("| Pass Rate | ").append(String.format("%.1f", passRate)).append("% |\n\n");
 
             // Status bar visual
             md.append("**Status Keseluruhan**: ");
             if (passRate == 100) {
-                md.append("🟢 **ALL PASSED**\n\n");
+                md.append("**ALL PASSED**\n\n");
             } else if (passRate >= 50) {
-                md.append("🟡 **PARTIAL PASS**\n\n");
+                md.append("**PARTIAL PASS**\n\n");
             } else {
-                md.append("🔴 **MOSTLY FAILED**\n\n");
+                md.append("**MOSTLY FAILED**\n\n");
             }
 
             md.append("---\n\n");
 
             // Detail per skenario
-            md.append("## 🔍 Detail Hasil Per Skenario\n\n");
+            md.append("## Detail Hasil Per Skenario\n\n");
             md.append(scenarioDetails);
 
             md.append("---\n\n");
 
             // Test Suite Matrix
-            md.append("## 📋 Test Suite Matrix\n\n");
+            md.append("## Test Suite Matrix\n\n");
             md.append("| Test Case ID | Skenario | Expected Result | Status |\n");
             md.append("|-------------|----------|-----------------|--------|\n");
             md.append("| TC-INV-01 | Membuat Invoice dengan data valid | Kalkulasi total benar & generate PDF | ")
-              .append(passedScenarios >= 1 ? "✅ Passed" : "❌ Failed").append(" |\n");
+                    .append(passedScenarios >= 1 ? "Passed" : "Failed").append(" |\n");
             md.append("| TC-INV-02 | Membuat Invoice dengan input nominal huruf | Sistem menolak dengan pesan error | ")
-              .append(passedScenarios >= 2 ? "✅ Passed" : "❌ Failed").append(" |\n");
+                    .append(passedScenarios >= 2 ? "Passed" : "Failed").append(" |\n");
             md.append("| TC-INV-03 | Membuat Invoice dengan diskon 0% dan 100% | Kalkulasi akhir benar tanpa minus | ")
-              .append(passedScenarios >= 3 ? "✅ Passed" : "❌ Failed").append(" |\n\n");
+                    .append(passedScenarios >= 3 ? "Passed" : "Failed").append(" |\n\n");
 
             md.append("---\n\n");
 
             // Report files
-            md.append("## 📁 File Report yang Di-generate\n\n");
+            md.append("## File Report yang Di-generate\n\n");
             md.append("| Format | Lokasi File |\n");
             md.append("|--------|-------------|\n");
-            md.append("| 📄 Markdown | `target/cucumber-reports/TEST_REPORT.md` |\n");
-            md.append("| 🌐 HTML | `target/cucumber-reports/cucumber-report.html` |\n");
-            md.append("| 📊 JSON | `target/cucumber-reports/cucumber-report.json` |\n");
-            md.append("| 📋 JUnit XML | `target/cucumber-reports/cucumber-report.xml` |\n\n");
+            md.append("| Markdown | `target/cucumber-reports/TEST_REPORT.md` |\n");
+            md.append("| HTML | `target/cucumber-reports/cucumber-report.html` |\n");
+            md.append("| JSON | `target/cucumber-reports/cucumber-report.json` |\n");
+            md.append("| JUnit XML | `target/cucumber-reports/cucumber-report.xml` |\n\n");
 
             md.append("---\n\n");
             md.append("*Report ini di-generate secara otomatis oleh `GenerateReport.java` setelah eksekusi test suite.*\n");
@@ -179,18 +177,18 @@ public class GenerateReport {
             Files.write(Paths.get(MD_REPORT), md.toString().getBytes("UTF-8"));
 
             System.out.println("==============================================");
-            System.out.println("  ✅ REPORT MARKDOWN BERHASIL DI-GENERATE!");
-            System.out.println("  📄 Lokasi: " + MD_REPORT);
+            System.out.println("  REPORT MARKDOWN BERHASIL DI-GENERATE!");
+            System.out.println("  Lokasi: " + MD_REPORT);
             System.out.println("==============================================");
             System.out.println("  Total: " + totalScenarios + " | Passed: " + passedScenarios + " | Failed: " + failedScenarios);
             System.out.println("  Pass Rate: " + String.format("%.1f", passRate) + "%");
             System.out.println("==============================================");
 
         } catch (FileNotFoundException e) {
-            System.err.println("❌ File JSON report tidak ditemukan: " + JSON_REPORT);
+            System.err.println(" File JSON report tidak ditemukan: " + JSON_REPORT);
             System.err.println("   Jalankan test terlebih dahulu: mvn test");
         } catch (Exception e) {
-            System.err.println("❌ Error generating report: " + e.getMessage());
+            System.err.println(" Error generating report: " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -1,53 +1,17 @@
-# Bug Report — Modul Invoice
+# 🐞 Bug Report — Modul Invoice
 
 **Proyek**: Sistem Informasi Klinik drh. Fanina  
 **URL**: https://compro-drhfanina-pad1.vercel.app  
-**Tanggal Pengujian**: 17 Juni 2026  
-**Penguji**: Kelompok 25 — PPPL UAS  
+**Tanggal Pengujian**: 17 Juni 2026
 **Environment**: Brave Browser v1.x | ChromeDriver | Windows 11
 
 ---
 
-## Bug #1 — Kalkulasi PPN/Pajak Tidak Ditampilkan Real-Time di Form
+## Bug #1 — Tidak Ada Pesan Error Saat Input Huruf di Kolom Harga
 
 | Field | Detail |
 |-------|--------|
 | **Bug ID** | BUG-INV-001 |
-| **Modul** | Invoice — Form Buat Invoice Baru |
-| **Severity** | 🟡 Medium |
-| **Priority** | High |
-| **Status** | Open |
-| **Test Case Terkait** | TC-INV-01 |
-
-### Deskripsi
-Saat admin mengisi Pajak (%) sebesar 11% pada form Buat Invoice, **Total yang ditampilkan di UI tidak berubah**. Total tetap menampilkan subtotal item (Rp 100.000) tanpa menambahkan kalkulasi pajak (seharusnya Rp 111.000).
-
-### Langkah Reproduksi
-1. Login sebagai Admin
-2. Masuk menu Invoice → Klik **+ Buat Invoice**
-3. Pilih Pemilik: `testing`, Hewan: `asd`
-4. Isi Tanggal Invoice dan Jatuh Tempo
-5. Tambah item: Nama = `Vaksin`, Qty = `1`, Harga = `100000`
-6. Klik **+ Tambah**
-7. Isi Pajak (%) = `11`
-8. **Perhatikan Total**
-
-### Expected Result
-Total berubah secara real-time menjadi **Rp 111.000** (Rp 100.000 + 11% PPN = Rp 11.000)
-
-### Actual Result
-Total tetap menampilkan **Rp 100.000**. Kalkulasi pajak hanya diproses oleh backend setelah klik "Buat Invoice".
-
-### Dampak
-User tidak dapat melihat preview total akhir (termasuk pajak) sebelum menyimpan invoice, sehingga berpotensi menimbulkan kesalahan kalkulasi yang tidak disadari.
-
----
-
-## Bug #2 — Tidak Ada Pesan Error Saat Input Huruf di Kolom Harga
-
-| Field | Detail |
-|-------|--------|
-| **Bug ID** | BUG-INV-002 |
 | **Modul** | Invoice — Form Buat Invoice Baru |
 | **Severity** | 🟡 Medium |
 | **Priority** | High |
@@ -83,45 +47,11 @@ Tambahkan validasi frontend yang menampilkan pesan error inline di bawah field H
 
 ---
 
-## Bug #3 — Kalkulasi Diskon Tidak Ditampilkan Real-Time di Form
+## Bug #2 — Tanggal Invoice Kosong Tidak Ada Validasi Frontend
 
 | Field | Detail |
 |-------|--------|
-| **Bug ID** | BUG-INV-003 |
-| **Modul** | Invoice — Form Buat Invoice Baru |
-| **Severity** | 🟡 Medium |
-| **Priority** | Medium |
-| **Status** | Open |
-| **Test Case Terkait** | TC-INV-03 |
-
-### Deskripsi
-Ketika admin mengubah nilai **Diskon (%)** menjadi 100% pada form Buat Invoice, **Total di UI tetap menampilkan subtotal asli** tanpa mengurangkan diskon. Kalkulasi diskon hanya diproses oleh backend saat submit.
-
-### Langkah Reproduksi
-1. Login sebagai Admin
-2. Masuk menu Invoice → Klik **+ Buat Invoice**
-3. Pilih Pemilik dan Hewan, Isi Tanggal
-4. Tambah item: Nama = `Konsultasi`, Qty = `1`, Harga = `50000`
-5. Klik **+ Tambah**
-6. Isi Diskon (%) = `100`
-7. **Perhatikan Total**
-
-### Expected Result
-Total berubah secara real-time menjadi **Rp 0** (Rp 50.000 - 100% diskon = Rp 0)
-
-### Actual Result
-Total tetap menampilkan **Rp 50.000**. Diskon baru terhitung setelah submit di sisi backend.
-
-### Dampak
-Sama seperti BUG-INV-001 — user tidak bisa melihat total akhir setelah diskon sebelum menyimpan.
-
----
-
-## Bug #4 — Tanggal Invoice Kosong Tidak Ada Validasi Frontend
-
-| Field | Detail |
-|-------|--------|
-| **Bug ID** | BUG-INV-004 |
+| **Bug ID** | BUG-INV-002 |
 | **Modul** | Invoice — Form Buat Invoice Baru |
 | **Severity** | 🔴 High |
 | **Priority** | High |
@@ -158,11 +88,11 @@ Tambahkan validasi `required` dengan pesan error inline pada kedua field tanggal
 
 | Bug ID | Severity | Deskripsi Singkat | Status |
 |--------|----------|-------------------|--------|
-| BUG-INV-001 | 🟡 Medium | PPN tidak dihitung real-time di UI | Open |
-| BUG-INV-002 | 🟡 Medium | Tidak ada error message saat input huruf di Harga | Open |
-| BUG-INV-003 | 🟡 Medium | Diskon tidak dihitung real-time di UI | Open |
-| BUG-INV-004 | 🔴 High | Tanggal kosong tidak ada validasi frontend | Open |
+| BUG-INV-001 | 🟡 Medium | Tidak ada error message saat input huruf di Harga | Open |
+| BUG-INV-002 | 🔴 High | Tanggal kosong tidak ada validasi frontend | Open |
+
+**Total Bug Ditemukan**: 2
 
 ---
 
-*Dokumen ini dibuat otomatis berdasarkan hasil pengujian automation Selenium + Cucumber pada modul Invoice.*
+*Dokumen ini dibuat berdasarkan hasil pengujian automation Selenium + Cucumber pada modul Invoice.*
