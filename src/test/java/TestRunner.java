@@ -6,7 +6,7 @@ import io.cucumber.core.options.Constants;
 
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("notification.feature")
+@SelectClasspathResource("faq.feature")
 @ConfigurationParameter(
         key = Constants.GLUE_PROPERTY_NAME,
         value = "stepDefinitions"
